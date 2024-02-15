@@ -1,0 +1,4 @@
+/home/mirko/CLionProjects/Parallel-Programming/cmake-build-debug/CMakeFiles/Parallel.dir
+/home/mirko/CLionProjects/Parallel-Programming/cmake-build-debug/CMakeFiles/Sequential.dir
+/home/mirko/CLionProjects/Parallel-Programming/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/mirko/CLionProjects/Parallel-Programming/cmake-build-debug/CMakeFiles/rebuild_cache.dir
