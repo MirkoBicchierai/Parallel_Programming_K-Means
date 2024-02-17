@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <omp.h>
+#include <SFML/Graphics.hpp>
 // Define maze dimensions
 const int ROWS = 10;
 const int COLS = 10;
@@ -64,12 +65,12 @@ int main() {
 
     // Move particles randomly until one reaches the exit
     while (true) {
-#pragma omp parallel for default(shared)
         for (Particle& particle : particles) {
             moveParticle(particle);
-            printf("Thread n:%d x %d y %d \n", omp_get_thread_num(), particle.x, particle.y);
+            std::cout << omp_get_thread_num() <<"_"<<"x:"<< particle.x<<"y:"<<particle.y<<"\n";
             if (particle.x == ROWS - 2 && particle.y == COLS - 2) { // Exit found
-                printf("Exit found at position: (%d, %d)", particle.x , particle.y);
+                std::cout << "Exit found at position: (" << particle.x << ", " << particle.y << ")\n";
+                return 0;
             }
         }
     }

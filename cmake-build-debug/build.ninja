@@ -52,6 +52,21 @@ build cmake_object_order_depends_target_Parallel: phony || CMakeFiles/Parallel.d
 build CMakeFiles/Parallel.dir/main-parallel.cpp.o: CXX_COMPILER__Parallel_unscanned_Debug /home/mirko/CLionProjects/Parallel-Programming/main-parallel.cpp || cmake_object_order_depends_target_Parallel
   DEP_FILE = CMakeFiles/Parallel.dir/main-parallel.cpp.o.d
   FLAGS = -fopenmp -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -I/home/mirko/CLionProjects/Parallel-Programming/SFML_INCLUDE_DIR
+  OBJECT_DIR = CMakeFiles/Parallel.dir
+  OBJECT_FILE_DIR = CMakeFiles/Parallel.dir
+
+build CMakeFiles/Parallel.dir/Maze.cpp.o: CXX_COMPILER__Parallel_unscanned_Debug /home/mirko/CLionProjects/Parallel-Programming/Maze.cpp || cmake_object_order_depends_target_Parallel
+  DEP_FILE = CMakeFiles/Parallel.dir/Maze.cpp.o.d
+  FLAGS = -fopenmp -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -I/home/mirko/CLionProjects/Parallel-Programming/SFML_INCLUDE_DIR
+  OBJECT_DIR = CMakeFiles/Parallel.dir
+  OBJECT_FILE_DIR = CMakeFiles/Parallel.dir
+
+build CMakeFiles/Parallel.dir/TileBox.cpp.o: CXX_COMPILER__Parallel_unscanned_Debug /home/mirko/CLionProjects/Parallel-Programming/TileBox.cpp || cmake_object_order_depends_target_Parallel
+  DEP_FILE = CMakeFiles/Parallel.dir/TileBox.cpp.o.d
+  FLAGS = -fopenmp -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -I/home/mirko/CLionProjects/Parallel-Programming/SFML_INCLUDE_DIR
   OBJECT_DIR = CMakeFiles/Parallel.dir
   OBJECT_FILE_DIR = CMakeFiles/Parallel.dir
 
@@ -63,8 +78,10 @@ build CMakeFiles/Parallel.dir/main-parallel.cpp.o: CXX_COMPILER__Parallel_unscan
 #############################################
 # Link the executable Parallel
 
-build Parallel: CXX_EXECUTABLE_LINKER__Parallel_Debug CMakeFiles/Parallel.dir/main-parallel.cpp.o
+build Parallel: CXX_EXECUTABLE_LINKER__Parallel_Debug CMakeFiles/Parallel.dir/main-parallel.cpp.o CMakeFiles/Parallel.dir/Maze.cpp.o CMakeFiles/Parallel.dir/TileBox.cpp.o | /usr/lib/x86_64-linux-gnu/libsfml-graphics.so.2.5.1 /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.5.1 /usr/lib/x86_64-linux-gnu/libsfml-audio.so.2.5.1 /usr/lib/x86_64-linux-gnu/libsfml-system.so.2.5.1
   FLAGS = -fopenmp -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/mirko/CLionProjects/Parallel-Programming/SFML_LIBRARY_DIR  /usr/lib/x86_64-linux-gnu/libsfml-graphics.so.2.5.1  /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.5.1  /usr/lib/x86_64-linux-gnu/libsfml-audio.so.2.5.1  /usr/lib/x86_64-linux-gnu/libsfml-system.so.2.5.1
+  LINK_PATH = -L/home/mirko/CLionProjects/Parallel-Programming/SFML_LIBRARY_DIR
   OBJECT_DIR = CMakeFiles/Parallel.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -83,6 +100,21 @@ build cmake_object_order_depends_target_Sequential: phony || CMakeFiles/Sequenti
 build CMakeFiles/Sequential.dir/main-sequential.cpp.o: CXX_COMPILER__Sequential_unscanned_Debug /home/mirko/CLionProjects/Parallel-Programming/main-sequential.cpp || cmake_object_order_depends_target_Sequential
   DEP_FILE = CMakeFiles/Sequential.dir/main-sequential.cpp.o.d
   FLAGS = -fopenmp -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -I/home/mirko/CLionProjects/Parallel-Programming/SFML_INCLUDE_DIR
+  OBJECT_DIR = CMakeFiles/Sequential.dir
+  OBJECT_FILE_DIR = CMakeFiles/Sequential.dir
+
+build CMakeFiles/Sequential.dir/Maze.cpp.o: CXX_COMPILER__Sequential_unscanned_Debug /home/mirko/CLionProjects/Parallel-Programming/Maze.cpp || cmake_object_order_depends_target_Sequential
+  DEP_FILE = CMakeFiles/Sequential.dir/Maze.cpp.o.d
+  FLAGS = -fopenmp -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -I/home/mirko/CLionProjects/Parallel-Programming/SFML_INCLUDE_DIR
+  OBJECT_DIR = CMakeFiles/Sequential.dir
+  OBJECT_FILE_DIR = CMakeFiles/Sequential.dir
+
+build CMakeFiles/Sequential.dir/TileBox.cpp.o: CXX_COMPILER__Sequential_unscanned_Debug /home/mirko/CLionProjects/Parallel-Programming/TileBox.cpp || cmake_object_order_depends_target_Sequential
+  DEP_FILE = CMakeFiles/Sequential.dir/TileBox.cpp.o.d
+  FLAGS = -fopenmp -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -I/home/mirko/CLionProjects/Parallel-Programming/SFML_INCLUDE_DIR
   OBJECT_DIR = CMakeFiles/Sequential.dir
   OBJECT_FILE_DIR = CMakeFiles/Sequential.dir
 
@@ -94,8 +126,10 @@ build CMakeFiles/Sequential.dir/main-sequential.cpp.o: CXX_COMPILER__Sequential_
 #############################################
 # Link the executable Sequential
 
-build Sequential: CXX_EXECUTABLE_LINKER__Sequential_Debug CMakeFiles/Sequential.dir/main-sequential.cpp.o
+build Sequential: CXX_EXECUTABLE_LINKER__Sequential_Debug CMakeFiles/Sequential.dir/main-sequential.cpp.o CMakeFiles/Sequential.dir/Maze.cpp.o CMakeFiles/Sequential.dir/TileBox.cpp.o | /usr/lib/x86_64-linux-gnu/libsfml-graphics.so.2.5.1 /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.5.1 /usr/lib/x86_64-linux-gnu/libsfml-audio.so.2.5.1 /usr/lib/x86_64-linux-gnu/libsfml-system.so.2.5.1
   FLAGS = -fopenmp -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/mirko/CLionProjects/Parallel-Programming/SFML_LIBRARY_DIR  /usr/lib/x86_64-linux-gnu/libsfml-graphics.so.2.5.1  /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.5.1  /usr/lib/x86_64-linux-gnu/libsfml-audio.so.2.5.1  /usr/lib/x86_64-linux-gnu/libsfml-system.so.2.5.1
+  LINK_PATH = -L/home/mirko/CLionProjects/Parallel-Programming/SFML_LIBRARY_DIR
   OBJECT_DIR = CMakeFiles/Sequential.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -145,14 +179,14 @@ build all: phony Parallel Sequential
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/mirko/CLionProjects/Parallel-Programming/CMakeLists.txt /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-C.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Initialize.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/mirko/CLionProjects/Parallel-Programming/CMakeLists.txt /home/mirko/CLionProjects/Parallel-Programming/lib/SFML/lib/cmake/SFML/SFMLConfigVersion.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-C.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Initialize.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLConfig.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLConfigDependencies.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLConfigVersion.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLSharedTargets-none.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLSharedTargets.cmake CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/mirko/CLionProjects/Parallel-Programming/CMakeLists.txt /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-C.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Initialize.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake: phony
+build /home/mirko/CLionProjects/Parallel-Programming/CMakeLists.txt /home/mirko/CLionProjects/Parallel-Programming/lib/SFML/lib/cmake/SFML/SFMLConfigVersion.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-C.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-GNU.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux-Initialize.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/Linux.cmake /snap/clion/265/bin/cmake/linux/x64/share/cmake-3.27/Modules/Platform/UnixPaths.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLConfig.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLConfigDependencies.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLConfigVersion.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLSharedTargets-none.cmake /usr/lib/x86_64-linux-gnu/cmake/SFML/SFMLSharedTargets.cmake CMakeCache.txt CMakeFiles/3.27.8/CMakeCCompiler.cmake CMakeFiles/3.27.8/CMakeCXXCompiler.cmake CMakeFiles/3.27.8/CMakeSystem.cmake: phony
 
 
 #############################################
