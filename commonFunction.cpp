@@ -1,16 +1,31 @@
-//
-// Created by mirko on 18/02/24.
-//
 #include <vector>
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cmath>
 
 struct Point{
     double x,y;
 };
 
 using namespace std;
+
+double euclideanDistance(Point p1, Point p2) {
+    double dist = 0;
+    dist += pow(p2.x-p1.x,2);
+    dist += pow(p2.y-p1.y,2);
+    return sqrt(dist);
+}
+
+bool areEqual(const std::vector<Point>& p1, const std::vector<Point>& p2) {
+    if (p1.size() != p2.size())
+        return false;
+    for (int i = 0; i < p1.size(); i++) {
+        if (p1[i].x != p2[i].x || p1[i].y != p2[i].y)
+            return false;
+    }
+    return true;
+}
 
 vector<Point> loadDataset(const string& path){
 

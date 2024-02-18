@@ -1,31 +1,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-#include <cmath>
 #include <chrono>
 #include "commonFunction.cpp"
 
 using namespace std;
-
-double euclideanDistance(Point p1, Point p2) {
-    double dist = 0;
-    dist += pow(p2.x-p1.x,2);
-    dist += pow(p2.y-p1.y,2);
-    return sqrt(dist);
-}
-
-bool areEqual(const std::vector<Point>& vec1, const std::vector<Point>& vec2) {
-    if (vec1.size() != vec2.size()) // If sizes are different, vectors are not equal
-        return false;
-
-    for (size_t i = 0; i < vec1.size(); ++i) {
-        if (vec1[i].x != vec2[i].x || vec1[i].y != vec2[i].y) // If any corresponding elements differ, vectors are not equal
-            return false;
-    }
-
-    return true; // Vectors are equal
-}
-
 
 vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
 
