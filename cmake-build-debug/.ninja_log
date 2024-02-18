@@ -1,16 +1,19 @@
 # ninja log v5
-0	30	1708135118575871942	build.ninja	9238457cbbf1b84a
+0	20	1708294612656645041	build.ninja	9238457cbbf1b84a
 1	16	1708134604841510985	CMakeFiles/Sequential.dir/config.cpp.o	c9ebe4253f445136
 442	550	1708098828232014306	Parallel	7b584c2fe6b141dd
-1	603	1708135065080067824	CMakeFiles/Sequential.dir/Maze.cpp.o	8a605df23dfd485a
+1	524	1708135160703714890	CMakeFiles/Sequential.dir/Maze.cpp.o	8a605df23dfd485a
 1	528	1708104437722264693	CMakeFiles/Sequential.dir/Particle.cpp.o	4cad06f6e6eafc05
 0	517	1708134712821222695	CMakeFiles/Sequential.dir/TileMap.cpp.o	7a578c87b7c8e6b0
 1	442	1708098828124015500	CMakeFiles/Parallel.dir/main-parallel.cpp.o	6631f3949f600c1a
 1	541	1708135065016068055	CMakeFiles/Sequential.dir/Tile.cpp.o	1451f7695432d020
-550	600	1708134766161066676	Sequential	3682e44d304c664
-2	569	1708103991196257126	CMakeFiles/Sequential.dir/Cell.cpp.o	a99b693bab5c942b
-1	659	1708135065136067621	CMakeFiles/Sequential.dir/main-sequential.cpp.o	84b1a4e01bca600a
+520	634	1708294422280449052	Sequential	93a4ed30300317d6
 1	476	1708135160655715070	CMakeFiles/Sequential.dir/TileBox.cpp.o	a9ccc6276c228fd2
-1	524	1708135160703714890	CMakeFiles/Sequential.dir/Maze.cpp.o	8a605df23dfd485a
-1	581	1708135160759714679	CMakeFiles/Sequential.dir/main-sequential.cpp.o	84b1a4e01bca600a
-581	631	1708135160811714484	Sequential	7c4b5125e13245d5
+2	569	1708103991196257126	CMakeFiles/Sequential.dir/Cell.cpp.o	a99b693bab5c942b
+0	520	1708294422168451732	CMakeFiles/Sequential.dir/main-sequential.cpp.o	57682538f33b6d1a
+1	604	1708294664775828128	CMakeFiles/Sequential.dir/main-sequential.cpp.o	57682538f33b6d1a
+604	719	1708294664887826460	Sequential	93a4ed30300317d6
+0	538	1708294709723187595	CMakeFiles/Parallel.dir/main-parallel.cpp.o	a66a7aa2c267a9fb
+538	649	1708294709835186068	Parallel	6568f0ff6918273b
+0	601	1708294805801993733	CMakeFiles/Parallel.dir/main-parallel.cpp.o	a66a7aa2c267a9fb
+601	716	1708294805917992422	Parallel	6568f0ff6918273b

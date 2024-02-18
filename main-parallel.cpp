@@ -1,78 +1,96 @@
 #include <iostream>
-#include <vector>
 #include <cstdlib>
-#include <ctime>
-#include <omp.h>
-// Define maze dimensions
-const int ROWS = 10;
-const int COLS = 10;
+#include <vector>
+#include <cmath>
+#include <chrono>
+#include "commonFunction.cpp"
 
-// Define maze structure
-char maze[ROWS][COLS] = {
-        {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-        {'#', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#'},
-        {'#', ' ', '#', ' ', '#', ' ', '#', '#', ' ', '#'},
-        {'#', ' ', '#', ' ', '#', ' ', ' ', ' ', ' ', '#'},
-        {'#', ' ', '#', ' ', '#', '#', '#', '#', ' ', '#'},
-        {'#', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', '#'},
-        {'#', '#', '#', '#', '#', '#', '#', '#', ' ', '#'},
-        {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-        {'#', ' ', '#', '#', '#', '#', '#', '#', '#', '#'},
-        {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}
-};
+using namespace std;
 
-// Define particle structure
-struct Particle {
-    int x;
-    int y;
-};
+double euclideanDistance(Point p1, Point p2) {
+    double dist = 0;
+    dist += pow(p2.x-p1.x,2);
+    dist += pow(p2.y-p1.y,2);
+    return sqrt(dist);
+}
 
-// Function to move particles randomly
-void moveParticle(Particle& particle) {
-    int direction = rand() % 4; // 0: up, 1: down, 2: left, 3: right
+bool areEqual(const std::vector<Point>& vec1, const std::vector<Point>& vec2) {
+    if (vec1.size() != vec2.size()) // If sizes are different, vectors are not equal
+        return false;
 
-    // Move particle according to the direction
-    switch(direction) {
-        case 0:
-            if (maze[particle.x - 1][particle.y] != '#')
-                particle.x--;
-            break;
-        case 1:
-            if (maze[particle.x + 1][particle.y] != '#')
-                particle.x++;
-            break;
-        case 2:
-            if (maze[particle.x][particle.y - 1] != '#')
-                particle.y--;
-            break;
-        case 3:
-            if (maze[particle.x][particle.y + 1] != '#')
-                particle.y++;
-            break;
+    for (size_t i = 0; i < vec1.size(); ++i) {
+        if (vec1[i].x != vec2[i].x || vec1[i].y != vec2[i].y) // If any corresponding elements differ, vectors are not equal
+            return false;
     }
+
+    return true; // Vectors are equal
+}
+
+
+vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
+
+    vector<Point> centroids(k, {0, 0});
+    for (int i = 0; i < k; ++i) {
+        centroids[i] = data[rand() % data.size()];
+    }
+
+    for (int iter = 0; iter < maxIterations; ++iter) {
+
+        vector<int> clusters(data.size(), 0);
+
+        #pragma omp parallel for schedule(static, data.size() / 16)
+        for (int i = 0; i < data.size(); i++) {
+            double minDistance = euclideanDistance(data[i], centroids[0]);
+            int clusterIdx = 0;
+            for (int j = 1; j < centroids.size(); j++) {
+                double distance = euclideanDistance(data[i], centroids[j]);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    clusterIdx = j;
+                }
+            }
+            clusters[i] = clusterIdx;
+        }
+
+        vector<Point> newCentroids(k, {0,0});
+        vector<int> counts(k, 0);
+
+        for (int i = 0; i < data.size(); i++) {
+            int clusterIdx = clusters[i];
+            newCentroids[clusterIdx].x += data[i].x;
+            newCentroids[clusterIdx].y += data[i].y;
+            counts[clusterIdx]++;
+        }
+
+        for (size_t i = 0; i < newCentroids.size(); ++i) {
+            newCentroids[i].x = newCentroids[i].x / counts[i];
+            newCentroids[i].y = newCentroids[i].y / counts[i];
+        }
+
+        if (areEqual(centroids, newCentroids)) {
+            return centroids;
+        }
+        centroids = newCentroids;
+    }
+
+    return centroids;
 }
 
 int main() {
-    srand(time(NULL)); // Seed the random number generator
 
-    std::vector<Particle> particles;
+    srand(17);
+    int maxIterations = 100;
+    int k = 2;
+    vector<Point> data = loadDataset("/home/mirko/CLionProjects/Parallel-Programming/worldcities.csv");
+    auto start = chrono::high_resolution_clock::now();
+    vector<Point> centroids  = kMeans(data,k,maxIterations);
+    auto end = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+    cout << "Execution time: " << duration.count() << " millisecond" << endl;
 
-    // Initialize particles at starting position
-    for (int i = 0; i < 100; ++i) {
-        particles.push_back({1, 1}); // Start from (1,1)
-    }
-
-    // Move particles randomly until one reaches the exit
-    while (true) {
-#pragma omp parallel for default(shared)
-        for (Particle& particle : particles) {
-            moveParticle(particle);
-            printf("Thread n:%d x %d y %d \n", omp_get_thread_num(), particle.x, particle.y);
-            if (particle.x == ROWS - 2 && particle.y == COLS - 2) { // Exit found
-                printf("Exit found at position: (%d, %d)", particle.x , particle.y);
-            }
-        }
-    }
+    cout<<"CENTROIDS:"<<endl;
+    for(auto centroid:centroids)
+        cout<<centroid.x<<" "<<centroid.y<<endl;
 
     return 0;
 }
