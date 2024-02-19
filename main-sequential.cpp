@@ -4,6 +4,13 @@
 #include <chrono>
 #include "commonFunction.cpp"
 
+// Execution time: 63102 millisecond
+//CENTROIDS:
+//28.7896 51.6934
+//15.3098 -80.3751
+//17.9158 113.029
+//38.7263 12.7813
+
 using namespace std;
 
 vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
@@ -14,7 +21,9 @@ vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
-        vector<int> clusters(data.size(), 0);
+        vector<Point> newCentroids(k, {0,0});
+        vector<int> counts(k, 0);
+
         for (int i = 0; i < data.size(); i++) {
             double minDistance = euclideanDistance(data[i], centroids[0]);
             int clusterIdx = 0;
@@ -25,14 +34,6 @@ vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
                     clusterIdx = j;
                 }
             }
-            clusters[i] = clusterIdx;
-        }
-
-        vector<Point> newCentroids(k, {0,0});
-        vector<int> counts(k, 0);
-
-        for (int i = 0; i < data.size(); i++) {
-            int clusterIdx = clusters[i];
             newCentroids[clusterIdx].x += data[i].x;
             newCentroids[clusterIdx].y += data[i].y;
             counts[clusterIdx]++;
@@ -43,9 +44,11 @@ vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
             newCentroids[i].y = newCentroids[i].y / counts[i];
         }
 
+        /*
         if (areEqual(centroids, newCentroids)) {
             return centroids;
         }
+        */
         centroids = newCentroids;
     }
 
@@ -56,7 +59,8 @@ int main() {
 
     srand(17);
     int maxIterations = 100;
-    int k = 2;
+    int k = 4;
+
     vector<Point> data = loadDataset("/home/mirko/CLionProjects/Parallel-Programming/worldcities.csv");
     auto start = chrono::high_resolution_clock::now();
     vector<Point> centroids  = kMeans(data,k,maxIterations);
