@@ -1,34 +1,26 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-#include <chrono>
+#include <omp.h>
 #include "commonFunction.cpp"
-
-//Execution time: 14924 millisecond
-//CENTROIDS:
-//28.7896 51.6934
-//15.3098 -80.3751
-//17.9158 113.029
-//38.7263 12.7813
+#include <string>
 
 using namespace std;
 
-vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
+vector<Point> kMeans(vector<Point>& data, int k, int maxIterations, int threads) {
 
-    vector<Point> centroids(k, {0, 0});
-    for (int i = 0; i < k; ++i) {
-        centroids[i] = data[rand() % data.size()];
-    }
+    int dimension = data[0].coordinate.size();
+    vector<Point> centroids=randomCentroid(k,dimension,data);
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
-        vector<Point> newCentroids(k, {0,0});
+        vector<Point> newCentroids = allZerosCentroid(k, dimension);
         vector<int> counts(k, 0);
-        int threads = 16;
+
         #pragma omp parallel num_threads(threads)
         {
             vector<int> tmp_cluster_cardinality(k, 0);
-            vector<Point> tmp_newCentroids(k, {0,0});
+            vector<Point> tmp_newCentroids = allZerosCentroid(k, dimension);
 
             #pragma omp for nowait schedule(static, data.size() / threads)
             for (int i = 0; i < data.size(); i++) {
@@ -41,16 +33,19 @@ vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
                         clusterIdx = j;
                     }
                 }
-                tmp_newCentroids[clusterIdx].x += data[i].x;
-                tmp_newCentroids[clusterIdx].y += data[i].y;
+                data[i].actualCentroid = clusterIdx;
+                for (int c = 0; c<dimension;c++) {
+                    tmp_newCentroids[clusterIdx].coordinate[c] += data[i].coordinate[c];
+                }
                 tmp_cluster_cardinality[clusterIdx]++;
             }
 
             #pragma omp critical
             {
                 for (int i = 0; i < k; i++) {
-                    newCentroids[i].x += tmp_newCentroids[i].x;
-                    newCentroids[i].y += tmp_newCentroids[i].y;
+                    for (int c = 0; c<dimension;c++) {
+                        newCentroids[i].coordinate[c] += tmp_newCentroids[i].coordinate[c];
+                    }
                     counts[i] += tmp_cluster_cardinality[i];
                 }
             }
@@ -58,10 +53,10 @@ vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
         }
 
         for (size_t i = 0; i < newCentroids.size(); ++i) {
-            newCentroids[i].x = newCentroids[i].x / counts[i];
-            newCentroids[i].y = newCentroids[i].y / counts[i];
+            for (int c = 0; c<dimension;c++) {
+                newCentroids[i].coordinate[c] = newCentroids[i].coordinate[c] / counts[i];
+            }
         }
-
         /*
         if (areEqual(centroids, newCentroids)) {
             return centroids;
@@ -70,26 +65,28 @@ vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
         centroids = newCentroids;
     }
 
+
     return centroids;
 }
 
-//TODO profiling python, exec time, relation, presentation
+//TODO profiling python, relation, presentation, fix git name, testare vettore stupido, coordinate[DIM]
 
 int main() {
-
-    srand(17);
+    int seed = 17;
+    srand(seed);
     int maxIterations = 100;
     int k = 4;
-    vector<Point> data = loadDataset("/home/mirko/CLionProjects/Parallel-Programming/worldcities.csv");
-    auto start = chrono::high_resolution_clock::now();
-    vector<Point> centroids  = kMeans(data,k,maxIterations);
-    auto end = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-    cout << "Execution time: " << duration.count() << " millisecond" << endl;
+    int threads = 16;
 
-    cout<<"CENTROIDS:"<<endl;
-    for(auto centroid:centroids)
-        cout<<centroid.x<<" "<<centroid.y<<endl;
+    vector<Point> data = loadDataset("../input/worldcities_mod.csv");
+
+    double dtime = omp_get_wtime();
+    vector<Point> centroids  = kMeans(data,k,maxIterations,threads);
+    dtime = omp_get_wtime() - dtime;
+    cout << "Execution time: " << dtime << " seconds" << endl;
+
+    writeCSV(centroids, "../output/centroids/parallel_"+to_string(k)+"_"+to_string(seed)+"_"+to_string(data.size())+"_"+to_string(threads)+".csv");
+    writeCSV(data, "../output/clusters/parallel_"+to_string(k)+"_"+to_string(seed)+"_"+to_string(data.size())+"_"+to_string(threads)+".csv");
 
     return 0;
 }

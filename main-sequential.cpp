@@ -1,27 +1,20 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-#include <chrono>
+#include "omp.h"
 #include "commonFunction.cpp"
 
-// Execution time: 63102 millisecond
-//CENTROIDS:
-//28.7896 51.6934
-//15.3098 -80.3751
-//17.9158 113.029
-//38.7263 12.7813
 
 using namespace std;
 
-vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
-    vector<Point> centroids(k, {0, 0});
-    for (int i = 0; i < k; ++i) {
-        centroids[i] = data[rand() % data.size()];
-    }
+
+vector<Point> kMeans(vector<Point> &data, int k, int maxIterations) {
+    int dimension = data[0].coordinate.size();
+    vector<Point> centroids = randomCentroid(k, dimension, data);
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
-        vector<Point> newCentroids(k, {0,0});
+        vector<Point> newCentroids = allZerosCentroid(k, dimension);
         vector<int> counts(k, 0);
 
         for (int i = 0; i < data.size(); i++) {
@@ -34,14 +27,17 @@ vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
                     clusterIdx = j;
                 }
             }
-            newCentroids[clusterIdx].x += data[i].x;
-            newCentroids[clusterIdx].y += data[i].y;
+            data[i].actualCentroid = clusterIdx;
+            for (int c = 0; c < dimension; c++) {
+                newCentroids[clusterIdx].coordinate[c] += data[i].coordinate[c];
+            }
             counts[clusterIdx]++;
         }
 
         for (size_t i = 0; i < newCentroids.size(); ++i) {
-            newCentroids[i].x = newCentroids[i].x / counts[i];
-            newCentroids[i].y = newCentroids[i].y / counts[i];
+            for (int c = 0; c < dimension; c++) {
+                newCentroids[i].coordinate[c] = newCentroids[i].coordinate[c] / counts[i];
+            }
         }
 
         /*
@@ -55,22 +51,26 @@ vector<Point> kMeans(const vector<Point>& data, int k, int maxIterations) {
     return centroids;
 }
 
-int main() {
 
-    srand(17);
+int main() {
+    int seed = 17;
+    srand(seed);
     int maxIterations = 100;
     int k = 4;
 
-    vector<Point> data = loadDataset("/home/mirko/CLionProjects/Parallel-Programming/worldcities.csv");
-    auto start = chrono::high_resolution_clock::now();
-    vector<Point> centroids  = kMeans(data,k,maxIterations);
-    auto end = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-    cout << "Execution time: " << duration.count() << " millisecond" << endl;
+    vector<Point> data = loadDataset("../input/worldcities_mod.csv");
 
-    cout<<"CENTROIDS:"<<endl;
-    for(auto centroid:centroids)
-        cout<<centroid.x<<" "<<centroid.y<<endl;
+    double dtime = omp_get_wtime();
+    vector<Point> centroids = kMeans(data, k, maxIterations);
+    dtime = omp_get_wtime() - dtime;
+    cout << "Execution time: " << dtime << " seconds" << endl;
+
+    writeCSV(centroids,
+             "../output/centroids/sequential_" + to_string(k) + "_" + to_string(seed) + "_" + to_string(data.size()) +
+             ".csv");
+    writeCSV(data,
+             "../output/clusters/sequential_" + to_string(k) + "_" + to_string(seed) + "_" + to_string(data.size()) +
+             ".csv");
 
     return 0;
 }
