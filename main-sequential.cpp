@@ -1,16 +1,13 @@
 #include <iostream>
-#include <cstdlib>
 #include <vector>
 #include "omp.h"
 #include "commonFunction.cpp"
 
-
 using namespace std;
 
-
-vector<Point> kMeans(vector<Point> &data, int k, int maxIterations) {
+vector<Point> kMeans(vector<Point>& data, int k, int maxIterations) {
     int dimension = data[0].coordinate.size();
-    vector<Point> centroids = randomCentroid(k, dimension, data);
+    vector<Point> centroids = randomCentroid(k, dimension,data);
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
@@ -27,6 +24,7 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations) {
                     clusterIdx = j;
                 }
             }
+            data[i].actualCentroid = clusterIdx;
             data[i].actualCentroid = clusterIdx;
             for (int c = 0; c < dimension; c++) {
                 newCentroids[clusterIdx].coordinate[c] += data[i].coordinate[c];
@@ -51,26 +49,20 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations) {
     return centroids;
 }
 
-
 int main() {
-    int seed = 17;
-    srand(seed);
-    int maxIterations = 100;
-    int k = 4;
 
-    vector<Point> data = loadDataset("../input/worldcities_mod.csv");
+    int maxIterations = 100;
+    int k = 3;
+
+    vector<Point> data = loadDataset("../input/dataset_100000.csv");
 
     double dtime = omp_get_wtime();
-    vector<Point> centroids = kMeans(data, k, maxIterations);
+    vector<Point> centroids  = kMeans(data,k,maxIterations);
     dtime = omp_get_wtime() - dtime;
     cout << "Execution time: " << dtime << " seconds" << endl;
 
-    writeCSV(centroids,
-             "../output/centroids/sequential_" + to_string(k) + "_" + to_string(seed) + "_" + to_string(data.size()) +
-             ".csv");
-    writeCSV(data,
-             "../output/clusters/sequential_" + to_string(k) + "_" + to_string(seed) + "_" + to_string(data.size()) +
-             ".csv");
+    writeCSV(centroids, "../output/centroids/sequential_"+to_string(k)+"_"+to_string(data.size())+".csv");
+    writeCSV(data, "../output/clusters/sequential_"+to_string(k)+"_"+to_string(data.size())+".csv");
 
     return 0;
 }

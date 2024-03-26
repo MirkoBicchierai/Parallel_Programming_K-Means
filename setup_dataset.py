@@ -1,11 +1,23 @@
-import pandas as pd
+import csv
+from sklearn.datasets import make_blobs
+
+bounds = 50
 
 
-def create_random_dataset():
-    df = pd.read_csv('input/worldcities.csv', delimiter=',')
-    last_two_columns = df.iloc[:, -2:]
-    last_two_columns.to_csv('input/modified_file.csv', index=False)
+def generate_points(n):
+    X, _ = make_blobs(n_samples=n, n_features=3, centers=3, center_box=(-bounds, bounds), cluster_std=2, shuffle=True)
+    return X
+
+
+def save_to_csv(points_list, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        for point in points_list:
+            writer.writerow(point)
 
 
 if __name__ == "__main__":
-    create_random_dataset()
+    dataset = [100, 1000, 10000, 100000, 1000000, 10000000]
+    for i in dataset:
+        points = generate_points(i)
+        save_to_csv(points, "input/dataset_" + str(i) + ".csv")

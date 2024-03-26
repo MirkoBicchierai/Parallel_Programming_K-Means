@@ -29,4 +29,4 @@ def single_plot(dim):
 
 if __name__ == "__main__":
     speedup()
-    single_plot(1000)
+    single_plot(10000)
