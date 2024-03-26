@@ -73,7 +73,7 @@ vector<Point> kMeans(vector<Point>& data, int k, int maxIterations, int threads)
 
 int main() {
     string file_name = "1000000";
-    int k = 3;
+    int k = 4;
     int threads = 16;
     int maxIterations = 100;
 
