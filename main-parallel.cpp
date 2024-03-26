@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstdlib>
 #include <vector>
 #include <omp.h>
 #include "commonFunction.cpp"
@@ -9,17 +8,18 @@ using namespace std;
 
 vector<Point> kMeans(vector<Point>& data, int k, int maxIterations, int threads) {
 
-    vector<Point> centroids = randomCentroid(k,data);
+    int dimension = data[0].coordinate.size();
+    vector<Point> centroids=randomCentroid(k,dimension,data);
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
-        vector<Point> newCentroids(k, {0, 0, 0});
+        vector<Point> newCentroids = allZerosCentroid(k, dimension);
         vector<int> counts(k, 0);
 
         #pragma omp parallel num_threads(threads)
         {
             vector<int> tmp_cluster_cardinality(k, 0);
-            vector<Point> tmp_newCentroids(k, {0, 0, 0});
+            vector<Point> tmp_newCentroids = allZerosCentroid(k, dimension);
 
             #pragma omp for nowait schedule(static, data.size() / threads)
             for (int i = 0; i < data.size(); i++) {
@@ -33,28 +33,29 @@ vector<Point> kMeans(vector<Point>& data, int k, int maxIterations, int threads)
                     }
                 }
                 data[i].actualCentroid = clusterIdx;
-                tmp_newCentroids[clusterIdx].x += data[i].x;
-                tmp_newCentroids[clusterIdx].y += data[i].y;
-                tmp_newCentroids[clusterIdx].z += data[i].z;
+                data[i].actualCentroid = clusterIdx;
+                for (int c = 0; c<dimension;c++) {
+                    tmp_newCentroids[clusterIdx].coordinate[c] += data[i].coordinate[c];
+                }
                 tmp_cluster_cardinality[clusterIdx]++;
             }
 
             #pragma omp critical
             {
                 for (int i = 0; i < k; i++) {
-                    newCentroids[i].x += tmp_newCentroids[i].x;
-                    newCentroids[i].y += tmp_newCentroids[i].y;
-                    newCentroids[i].z += tmp_newCentroids[i].z;
+                    for (int c = 0; c<dimension;c++) {
+                        newCentroids[i].coordinate[c] += tmp_newCentroids[i].coordinate[c];
+                    }
                     counts[i] += tmp_cluster_cardinality[i];
                 }
             }
 
         }
 
-        for (size_t i = 0; i < newCentroids.size(); ++i) {
-            newCentroids[i].x = newCentroids[i].x / counts[i];
-            newCentroids[i].y = newCentroids[i].y / counts[i];
-            newCentroids[i].z = newCentroids[i].z / counts[i];
+        for (int i = 0; i < newCentroids.size(); ++i) {
+            for (int c = 0; c<dimension;c++) {
+                newCentroids[i].coordinate[c] = newCentroids[i].coordinate[c] / counts[i];
+            }
         }
         /*
         if (areEqual(centroids, newCentroids)) {
@@ -68,10 +69,10 @@ vector<Point> kMeans(vector<Point>& data, int k, int maxIterations, int threads)
     return centroids;
 }
 
-//TODO profiling python, relation, presentation, General dimension and vectorization with omp
+//TODO relation, presentation, -O3 optmization (only compile)
 
 int main() {
-    string file_name = "1000";
+    string file_name = "1000000";
     int k = 3;
     int threads = 16;
     int maxIterations = 100;
