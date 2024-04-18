@@ -72,8 +72,8 @@ vector<Point> kMeans(vector<Point>& data, int k, int maxIterations, int threads)
 //TODO relation, presentation, -O3 optmization (only compile)
 
 int main() {
-    string file_name = "1000000";
-    int k = 4;
+    string file_name = "1000";
+    int k = 3;
     int threads = 16;
     int maxIterations = 100;
 
@@ -84,6 +84,7 @@ int main() {
     dtime = omp_get_wtime() - dtime;
     cout << "Execution time: " << dtime << " seconds" << endl;
 
+    writeResult("Parallel", to_string(data.size()), to_string(k), threads, dtime, "../Times/Times.txt");
     writeCSV(centroids, "../output/centroids/parallel_"+to_string(k)+"_"+to_string(data.size())+"_"+to_string(threads)+".csv");
     writeCSV(data, "../output/clusters/parallel_"+to_string(k)+"_"+to_string(data.size())+"_"+to_string(threads)+".csv");
 

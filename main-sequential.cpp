@@ -5,9 +5,9 @@
 
 using namespace std;
 
-vector<Point> kMeans(vector<Point>& data, int k, int maxIterations) {
+vector<Point> kMeans(vector<Point> &data, int k, int maxIterations) {
     int dimension = data[0].coordinate.size();
-    vector<Point> centroids = randomCentroid(k, dimension,data);
+    vector<Point> centroids = randomCentroid(k, dimension, data);
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
@@ -50,19 +50,19 @@ vector<Point> kMeans(vector<Point>& data, int k, int maxIterations) {
 }
 
 int main() {
-
-    int maxIterations = 100;
+    string file_name = "1000";
     int k = 3;
+    int maxIterations = 100;
 
-    vector<Point> data = loadDataset("../input/dataset_100000.csv");
+    vector<Point> data = loadDataset("../input/dataset_"+file_name+".csv");
 
     double dtime = omp_get_wtime();
-    vector<Point> centroids  = kMeans(data,k,maxIterations);
+    vector<Point> centroids = kMeans(data, k, maxIterations);
     dtime = omp_get_wtime() - dtime;
     cout << "Execution time: " << dtime << " seconds" << endl;
-
-    writeCSV(centroids, "../output/centroids/sequential_"+to_string(k)+"_"+to_string(data.size())+".csv");
-    writeCSV(data, "../output/clusters/sequential_"+to_string(k)+"_"+to_string(data.size())+".csv");
+    writeResult("Sequential", to_string(data.size()), to_string(k), 1, dtime, "../Times/Times.txt");
+    writeCSV(centroids, "../output/centroids/sequential_" + to_string(k) + "_" + to_string(data.size()) + ".csv");
+    writeCSV(data, "../output/clusters/sequential_" + to_string(k) + "_" + to_string(data.size()) + ".csv");
 
     return 0;
 }
