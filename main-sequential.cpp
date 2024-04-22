@@ -50,19 +50,25 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations) {
 }
 
 int main() {
-    string file_name = "1000";
-    int k = 3;
+    std::vector<std::string> file_names = {"100", "1000", "10000", "100000"}; // "100", "1000", "10000", "100000", "1000000", "10000000"
+    std::vector<int> cen;
+    for (int i = 3; i <= 50; ++i) {
+        cen.push_back(i);
+    }
     int maxIterations = 100;
 
-    vector<Point> data = loadDataset("../input/dataset_"+file_name+".csv");
-
-    double dtime = omp_get_wtime();
-    vector<Point> centroids = kMeans(data, k, maxIterations);
-    dtime = omp_get_wtime() - dtime;
-    cout << "Execution time: " << dtime << " seconds" << endl;
-    writeResult("Sequential", to_string(data.size()), to_string(k), 1, dtime, "../Times/Times.txt");
-    writeCSV(centroids, "../output/centroids/sequential_" + to_string(k) + "_" + to_string(data.size()) + ".csv");
-    writeCSV(data, "../output/clusters/sequential_" + to_string(k) + "_" + to_string(data.size()) + ".csv");
+    for (const std::string &name: file_names) {
+        for (const auto k: cen) {
+            vector<Point> data = loadDataset("../input/dataset_" + name + "_"+to_string(k)+".csv");
+            double dtime = omp_get_wtime();
+            vector<Point> centroids = kMeans(data, k, maxIterations);
+            dtime = omp_get_wtime() - dtime;
+            cout << "D:" + to_string(data.size()) + " K:" + to_string(k) + " Execution time sequential: " << dtime<< " seconds" << endl;
+            writeResult(to_string(data.size()), to_string(k), 1, dtime, "../Times/Times_Sequential.txt");
+            writeCSV(centroids, "../output/centroids/sequential_" + to_string(k) + "_" + to_string(data.size()) + ".csv");
+            writeCSV(data, "../output/clusters/sequential_" + to_string(k) + "_" + to_string(data.size()) + ".csv");
+        }
+    }
 
     return 0;
 }
