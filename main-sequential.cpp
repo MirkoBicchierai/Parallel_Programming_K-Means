@@ -43,6 +43,7 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations) {
             return centroids;
         }
         */
+
         centroids = newCentroids;
     }
 
@@ -50,9 +51,10 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations) {
 }
 
 int main() {
-    std::vector<std::string> file_names = {"100", "1000", "10000", "100000"}; // "100", "1000", "10000", "100000", "1000000", "10000000"
+    std::vector<std::string> file_names = {"10000000"}; // "100", "1000", "10000", "100000", "1000000",
     std::vector<int> cen;
-    for (int i = 3; i <= 50; ++i) {
+
+    for (int i = 35; i <= 50; ++i) {
         cen.push_back(i);
     }
     int maxIterations = 100;

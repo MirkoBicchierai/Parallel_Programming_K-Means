@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <cmath>
+#include <random>
 
 using namespace std;
 
@@ -22,9 +23,22 @@ vector<Point> allZerosCentroid(int k, int dimension) {
 }
 
 vector<Point> randomCentroid(int k, int dimension, vector<Point> &data) {
+
     vector<Point> centroids(k);
+
+    vector<int> indexes(k);
+    std::random_device rand_dev;
+    std::mt19937 gen(rand_dev());
+    std::uniform_int_distribution<> distrib(0, data.size() - 1);
+
+    int r;
     for (int i = 0; i < k; i++) {
-        int r = rand() % data.size();
+        while(true) {
+            r = distrib(gen);
+            if(std::find(indexes.begin(), indexes.end(), r) == indexes.end())
+                break;
+        }
+        indexes.push_back(r);
         for (int j = 0; j < dimension; j++)
             centroids[i].coordinate.push_back(data[r].coordinate[j]);
     }

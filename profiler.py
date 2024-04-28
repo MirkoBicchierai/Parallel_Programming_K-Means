@@ -7,7 +7,7 @@ def speedup():
 
 
 def single_plot(dim):
-    df = pd.read_csv('output/clusters/sequential_3_' + str(dim) + '.csv', delimiter=',')
+    df = pd.read_csv('output/clusters/sequential_4_' + str(dim) + '.csv', delimiter=',')
     x = df.iloc[:, 0]
     y = df.iloc[:, 1]
     z = df.iloc[:, 2]
@@ -16,7 +16,7 @@ def single_plot(dim):
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    colors = ["blue", "red", "green", "purple", "brown", "pink"]
+    colors = ["blue", "red", "green", "purple", "brown", "pink", "black"]
     for i in range(len(df)):
         ax.scatter(x[i], y[i], z[i], color=colors[unique_values.index(centroid[i])])
 
@@ -29,4 +29,4 @@ def single_plot(dim):
 
 if __name__ == "__main__":
     speedup()
-    single_plot(10000)
+    single_plot(100)

@@ -72,14 +72,13 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations, int threads)
 //TODO relation, presentation, -O3 optmization (only compile)
 
 int main() {
-    //int threads = 16;
     std::vector<int> threads = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
     std::vector<std::string> file_names = {"100", "1000", "10000", "100000", "1000000", "10000000"};
     std::vector<int> cen;
     for (int i = 3; i <= 50; ++i) {
         cen.push_back(i);
     }
-    int maxIterations = 250;
+    int maxIterations = 100;
 
     for (const std::string &name: file_names) {
         for (const auto k: cen) {

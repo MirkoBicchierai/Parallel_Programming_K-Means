@@ -2,11 +2,11 @@ import csv
 from sklearn.datasets import make_blobs
 import numpy as np
 
-bounds = 50
+bounds = 40
 
 
 def generate_points(n, k):
-    X, _ = make_blobs(n_samples=n, n_features=3, centers=k, center_box=(-bounds, bounds), cluster_std=2, shuffle=True)
+    X, _ = make_blobs(n_samples=n, n_features=3, centers=k, center_box=(-bounds, bounds), cluster_std=4, shuffle=True)
     return X
 
 
