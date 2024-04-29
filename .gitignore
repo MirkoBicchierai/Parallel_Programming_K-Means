@@ -2,3 +2,5 @@
 /venv/
 /input/
 /cmake-build-debug/
+/tmp/
+/plot/

@@ -6,10 +6,10 @@
 
 using namespace std;
 
-vector<Point> kMeans(vector<Point> &data, int k, int maxIterations, int threads) {
+vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int maxIterations, int threads) {
 
     int dimension = data[0].coordinate.size();
-    vector<Point> centroids = randomCentroid(k, dimension, data);
+    int block = ceil(data.size() / threads);
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
@@ -18,10 +18,11 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations, int threads)
 
 #pragma omp parallel num_threads(threads)
         {
+
             vector<int> tmp_cluster_cardinality(k, 0);
             vector<Point> tmp_newCentroids = allZerosCentroid(k, dimension);
 
-#pragma omp for nowait schedule(static, data.size() / threads)
+#pragma omp for nowait schedule(static, block)
             for (int i = 0; i < data.size(); i++) {
                 double minDistance = euclideanDistance(data[i], centroids[0]);
                 int clusterIdx = 0;
@@ -32,7 +33,6 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations, int threads)
                         clusterIdx = j;
                     }
                 }
-                data[i].actualCentroid = clusterIdx;
                 data[i].actualCentroid = clusterIdx;
                 for (int c = 0; c < dimension; c++) {
                     tmp_newCentroids[clusterIdx].coordinate[c] += data[i].coordinate[c];
@@ -53,8 +53,10 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations, int threads)
         }
 
         for (int i = 0; i < newCentroids.size(); ++i) {
+            newCentroids[i].actualCentroid = counts[i];
             for (int c = 0; c < dimension; c++) {
-                newCentroids[i].coordinate[c] = newCentroids[i].coordinate[c] / counts[i];
+                if (counts[i] != 0)
+                    newCentroids[i].coordinate[c] = newCentroids[i].coordinate[c] / counts[i];
             }
         }
         /*
@@ -65,27 +67,23 @@ vector<Point> kMeans(vector<Point> &data, int k, int maxIterations, int threads)
         centroids = newCentroids;
     }
 
-
     return centroids;
 }
 
-//TODO relation, presentation, -O3 optmization (only compile)
-
 int main() {
-    std::vector<int> threads = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-    std::vector<std::string> file_names = {"100", "1000", "10000", "100000", "1000000", "10000000"};
-    std::vector<int> cen;
-    for (int i = 3; i <= 50; ++i) {
-        cen.push_back(i);
-    }
+    std::vector<int> threads = {2, 4, 8, 16};
+    std::vector<std::string> file_names = { "100", "1000", "10000"}; // ,....., "100000", "1000000", "10000000"
+    std::vector<int> cen = {3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50};
+
     int maxIterations = 100;
 
     for (const std::string &name: file_names) {
         for (const auto k: cen) {
             for (const auto t: threads) {
-                vector<Point> data = loadDataset("../input/dataset_" + name + ".csv");
+                vector<Point> data = loadDataset("../input/dataset_" + name + "_" + to_string(k) + ".csv");
+                vector<Point> centroids = randomCentroid(k, data[0].coordinate.size(), data);
                 double dtime = omp_get_wtime();
-                vector<Point> centroids = kMeans(data, k, maxIterations, t);
+                centroids = kMeans(data, centroids, k, maxIterations, t);
                 dtime = omp_get_wtime() - dtime;
                 cout << "D:" + to_string(data.size()) + " K:" + to_string(k) + " T:" + to_string(t) + " Execution time parallel: " << dtime << " seconds" << endl;
                 writeResult(to_string(data.size()), to_string(k), t, dtime, "../Times/Times_Parallel.txt");

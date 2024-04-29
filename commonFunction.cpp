@@ -44,12 +44,11 @@ vector<Point> randomCentroid(int k, int dimension, vector<Point> &data) {
     }
     return centroids;
 }
-
+// #pragma omp simd
 double euclideanDistance(Point p1, Point p2) {
     double dist = 0;
-    // #pragma omp simd
     for (int i = 0; i < p1.coordinate.size(); i++)
-        dist += (p2.coordinate[i] - p1.coordinate[i]) * (p2.coordinate[i] - p1.coordinate[i]);
+        dist += pow((p2.coordinate[i] - p1.coordinate[i]), 2);
     return sqrt(dist);
 }
 
@@ -96,7 +95,14 @@ void writeResult(const string &len, const string &k, int n, double time,
 
 void writeCSV(const vector<Point> &data, const string &filename) {
     ofstream file(filename);
-
+    file << "X";
+    file << ",";
+    file << "Y";
+    file << ",";
+    file << "Z";
+    file << ",";
+    file << "Actual";
+    file << endl;
     for (const auto &point: data) {
         for (double c: point.coordinate) {
             file << c;
