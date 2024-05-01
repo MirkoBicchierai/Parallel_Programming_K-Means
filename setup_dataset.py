@@ -19,7 +19,7 @@ def save_to_csv(points_list, filename):
 
 if __name__ == "__main__":
     dataset = [100, 1000, 10000, 100000, 1000000, 10000000]
-    cen = np.arange(3, 51)
+    cen = [3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
     for i in dataset:
         for k in cen:
             points = generate_points(i, k)

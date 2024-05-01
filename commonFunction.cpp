@@ -5,30 +5,33 @@
 #include <cmath>
 #include <random>
 
+#define DIM 3
+
 using namespace std;
 
 struct Point {
-    vector<double> coordinate;
+    double coordinate[DIM]{};
     int actualCentroid{};
 };
+
+std::random_device rand_dev;
+std::mt19937 gen(rand_dev());
 
 vector<Point> allZerosCentroid(int k, int dimension) {
     vector<Point> centroids(k);
     for (int i = 0; i < k; i++) {
         for (int j = 0; j < dimension; j++)
-            centroids[i].coordinate.push_back(0);
+            centroids[i].coordinate[j] = 0;
         centroids[i].actualCentroid = i;
     }
     return centroids;
 }
 
-vector<Point> randomCentroid(int k, int dimension, vector<Point> &data) {
+vector<Point> randomCentroid(int k, vector<Point> &data) {
 
     vector<Point> centroids(k);
 
     vector<int> indexes(k);
-    std::random_device rand_dev;
-    std::mt19937 gen(rand_dev());
     std::uniform_int_distribution<> distrib(0, data.size() - 1);
 
     int r;
@@ -39,22 +42,28 @@ vector<Point> randomCentroid(int k, int dimension, vector<Point> &data) {
                 break;
         }
         indexes.push_back(r);
-        for (int j = 0; j < dimension; j++)
-            centroids[i].coordinate.push_back(data[r].coordinate[j]);
+        centroids[i] = data[r];
     }
     return centroids;
 }
-// #pragma omp simd
-double euclideanDistance(Point p1, Point p2) {
+
+double euclideanDistance(const Point& p1, const Point& p2) {
     double dist = 0;
-    for (int i = 0; i < p1.coordinate.size(); i++)
-        dist += pow((p2.coordinate[i] - p1.coordinate[i]), 2);
+    for (int i = 0; i < DIM; i++)
+        dist += (p1.coordinate[i] - p2.coordinate[i]) * (p1.coordinate[i] - p2.coordinate[i]);
+    return sqrt(dist);
+}
+
+double distance(const Point& p1, const Point& p2) {
+    double dist = 0;
+    for (int i = 0; i < DIM; i++)
+        dist += (p1.coordinate[i] - p2.coordinate[i]) * (p1.coordinate[i] - p2.coordinate[i]);
     return sqrt(dist);
 }
 
 bool areEqual(const std::vector<Point> &vec1, const std::vector<Point> &vec2) {
     for (int j = 0; j < vec1.size(); j++) {
-        for (int i = 0; i < vec1[j].coordinate.size(); i++) {
+        for (int i = 0; i < DIM; i++) {
             if (vec1[j].coordinate[i] != vec2[j].coordinate[i]) {
                 return false;
             }
@@ -72,13 +81,10 @@ vector<Point> loadDataset(const string &path) {
         stringstream ss(line);
         string temp;
         Point p{};
-        getline(ss, temp, ',');
-        double x = stod(temp);
-        p.coordinate.push_back(x);
-        getline(ss, temp, ',');
-        p.coordinate.push_back(stod(temp));
-        getline(ss, temp, ',');
-        p.coordinate.push_back(stod(temp));
+        for (double & i : p.coordinate) {
+            getline(ss, temp, ',');
+            i = stod(temp);
+        }
         p.actualCentroid = -1;
         data.push_back(p);
     }
@@ -112,4 +118,68 @@ void writeCSV(const vector<Point> &data, const string &filename) {
         file << endl;
     }
     file.close();
+}
+
+Point next_centroid (const std::vector<Point> &data, const std::vector<double> &distances) {
+    std::discrete_distribution<> distrib(distances.begin(), distances.end());
+    int index = distrib(gen);
+    return data[index];
+}
+
+
+std::vector<Point> initialization_kmean_par(const std::vector<Point> &data, const int k, const int t) {
+
+    std::vector<Point> centroids;
+    centroids.reserve(k);
+    std::uniform_int_distribution<> distrib(0, data.size() - 1);
+
+    // First centroid random
+    centroids.push_back(data[distrib(gen)]);
+    int block = ceil(data.size() / t);
+    // Other centroids based on probability (weighted)
+    while (centroids.size() < k) {
+
+        std::vector<double> distances(data.size(), std::numeric_limits<double>::max());
+
+        #pragma omp parallel for schedule(static, block) num_threads(t)
+            for (int i = 0; i < data.size(); i++) {
+                for (const Point &centroid : centroids) {
+                    double distance = euclideanDistance(data[i], centroid);
+                    distances[i] = std::min(distances[i], distance);
+                }
+            }
+
+        Point nextCentroid = next_centroid(data, distances);
+        centroids.push_back(nextCentroid);
+    }
+
+
+    return centroids;
+}
+
+std::vector<Point> initialization_kmean_seq(const std::vector<Point> &data, const int k) {
+
+    std::vector<Point> centroids;
+    std::uniform_int_distribution<> distrib(0, data.size() - 1);
+
+    // the first centroid is chosen randomly
+    centroids.push_back(data[distrib(gen)]);
+
+    // the other centroids are chosen based on the weighted probability
+    while (centroids.size() < k) {
+
+        std::vector<double> distances(data.size(), std::numeric_limits<double>::max());
+
+        for (size_t i = 0; i < data.size(); i++) {
+            for (const Point &centroid : centroids) {
+                double distance = euclideanDistance(data[i], centroid);
+                distances[i] = std::min(distances[i], distance);
+            }
+        }
+
+        Point nextCentroid = next_centroid(data, distances);
+        centroids.push_back(nextCentroid);
+    }
+
+    return centroids;
 }
