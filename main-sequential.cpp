@@ -68,9 +68,9 @@ int runSingleTest(bool output, vector<Point> data, const int k, int n, int maxIt
 
     cout << "D:" + to_string(data.size()) + " K:" + to_string(k) + " Execution time sequential: " << sum_time
          << " seconds" << endl;
+    writeResult(to_string(data.size()), to_string(k), 1, sum_time, "../Times/Times_Sequential.txt");
 
     if (output) {
-        writeResult(to_string(data.size()), to_string(k), 1, sum_time, "../Times/Times_Sequential.txt");
         writeCSV(centroids, "../output/centroids/sequential_" + to_string(k) + "_" + to_string(data.size()) + ".csv");
         writeCSV(data, "../output/clusters/sequential_" + to_string(k) + "_" + to_string(data.size()) + ".csv");
     }

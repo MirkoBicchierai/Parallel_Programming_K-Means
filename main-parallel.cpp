@@ -86,9 +86,9 @@ int runSingleTest(bool output, const int t, vector<Point> data, const int k, int
 
     cout << "D:" + to_string(data.size()) + " K:" + to_string(k) + " T:" + to_string(t) +
             " Execution time parallel: " << sum_time << " seconds" << endl;
+    writeResult(to_string(data.size()), to_string(k), t, sum_time, "../Times/Times_Parallel.txt");
 
     if (output) {
-        writeResult(to_string(data.size()), to_string(k), t, sum_time, "../Times/Times_Parallel.txt");
         writeCSV(centroids,
                  "../output/centroids/parallel_" + to_string(k) + "_" + to_string(data.size()) + "_" +
                  to_string(t) + ".csv");
