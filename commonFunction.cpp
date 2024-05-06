@@ -1,10 +1,10 @@
+#pragma once
 #include <vector>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <cmath>
 #include <random>
-
 #define DIM 3
 
 using namespace std;
@@ -12,20 +12,28 @@ using namespace std;
 struct Point {
     double coordinate[DIM]{};
     int actualCentroid{};
+
+
+    Point(){
+        for(double c : coordinate){
+            c = 0;
+        }
+        actualCentroid = -1;
+    }
+
+    void operator+=(const Point& p){
+        for (int i=0; i<DIM; i++)
+            this->coordinate[i] += p.coordinate[i];
+    }
+
+    void operator/=(const int& cardinality){
+        for (double & c : coordinate)
+            c /= (double)cardinality;
+    }
 };
 
 std::random_device rand_dev;
 std::mt19937 gen(rand_dev());
-
-vector<Point> allZerosCentroid(int k, int dimension) {
-    vector<Point> centroids(k);
-    for (int i = 0; i < k; i++) {
-        for (int j = 0; j < dimension; j++)
-            centroids[i].coordinate[j] = 0;
-        centroids[i].actualCentroid = i;
-    }
-    return centroids;
-}
 
 vector<Point> randomCentroid(int k, vector<Point> &data) {
 

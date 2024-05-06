@@ -7,37 +7,28 @@ using namespace std;
 
 vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int maxIterations) {
 
-    vector<Point> newCentroids = allZerosCentroid(k, DIM);
+    vector<Point> newCentroids = std::vector<Point>(k, Point());
 
     for (int iter = 0; iter < maxIterations; ++iter) {
         vector<int> counts(k, 0);
-        newCentroids = allZerosCentroid(k, DIM);
+        newCentroids = std::vector<Point>(k, Point());
 
-        for (int i = 0; i < data.size(); i++) {
-            double minDistance = distance(data[i], centroids[0]);
-            int clusterIdx = 0;
-
-            for (int j = 1; j < centroids.size(); j++) {
-                if (distance(data[i], centroids[j]) < minDistance) {
-                    minDistance = distance(data[i], centroids[j]);
-                    clusterIdx = j;
+        for (Point& pt: data) {
+            double minDistance = distance(pt, centroids[0]);
+            pt.actualCentroid = 0;
+            for (int i = 0; i < k; i++) {
+                double x = distance(pt, centroids[i]);
+                if ( x < minDistance) {
+                    minDistance = x;
+                    pt.actualCentroid = i;
                 }
             }
-            data[i].actualCentroid = clusterIdx;
-            for (int c = 0; c < DIM; c++) {
-                newCentroids[clusterIdx].coordinate[c] += data[i].coordinate[c];
-            }
-
-            counts[clusterIdx]++;
-
+            newCentroids[pt.actualCentroid] += pt;
+            counts[pt.actualCentroid]++;
         }
 
-        for (size_t i = 0; i < newCentroids.size(); ++i) {
-            newCentroids[i].actualCentroid = counts[i];
-            for (double &c: newCentroids[i].coordinate) {
-                if (counts[i] != 0)
-                    c = c / counts[i];
-            }
+        for (int i = 0; i < k; i++) {
+            newCentroids[i] /= counts[i];
         }
 
         /*
@@ -51,6 +42,7 @@ vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int m
 
     return centroids;
 }
+
 
 int runSingleTest(bool output, vector<Point> data, const int k, int n, int maxIterations) {
 
@@ -124,9 +116,9 @@ int main() {
     int ret;
     int n_test = 10;
 
-    //vector<Point> data = loadDataset("../input/dataset_" + to_string(100) + "_" + to_string(3) + ".csv");
-    // ret = runSingleTest(false, 16, data, 3, n_test, 100);
-    // ret = runSingleTest_initialization(false, 16, data, 3, n_test);
+    vector<Point> data = loadDataset("../input/dataset_1000000_5.csv");
+    // ret = runSingleTest(false, data, 3, n_test, 100);
+    // ret = runSingleTest_initialization(false, data, 3, n_test);
 
     ret = runAllTest(true, false, n_test);
 

@@ -9,54 +9,47 @@ using namespace std;
 vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int maxIterations, int threads) {
 
     int block = ceil(data.size() / threads);
+    std::vector<Point> newCentroids = std::vector<Point>(k, Point());
+    std::vector<int> counts(k, 0);
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
-        vector<Point> newCentroids = allZerosCentroid(k, DIM);
-        vector<int> counts(k, 0);
+        newCentroids = std::vector<Point>(k, Point());
+        counts = std::vector<int>(k, 0);
 
 #pragma omp parallel num_threads(threads)
         {
 
-            vector<int> tmp_cluster_cardinality(k, 0);
-            vector<Point> tmp_newCentroids = allZerosCentroid(k, DIM);
+            std::vector<int> tmp_counts(k, 0);
+            std::vector<Point> tmp_newCentroids(k, Point());
 
 #pragma omp for nowait schedule(static, block)
-            for (int i = 0; i < data.size(); i++) {
-                double minDistance = distance(data[i], centroids[0]);
-                int clusterIdx = 0;
-                for (int j = 1; j < centroids.size(); j++) {
-                    double dist = distance(data[i], centroids[j]);
+            for (Point &pt: data) {
+                double minDistance = distance(pt, centroids[0]);
+                pt.actualCentroid = 0;
+                for (int j = 1; j < k; j++) {
+                    double dist = distance(pt, centroids[j]);
                     if (dist < minDistance) {
                         minDistance = dist;
-                        clusterIdx = j;
+                        pt.actualCentroid = j;
                     }
                 }
-                data[i].actualCentroid = clusterIdx;
-                for (int c = 0; c < DIM; c++) {
-                    tmp_newCentroids[clusterIdx].coordinate[c] += data[i].coordinate[c];
-                }
-                tmp_cluster_cardinality[clusterIdx]++;
+                tmp_newCentroids[pt.actualCentroid] += pt;
+                tmp_counts[pt.actualCentroid]++;
             }
 
 #pragma omp critical
             {
                 for (int i = 0; i < k; i++) {
-                    for (int c = 0; c < DIM; c++) {
-                        newCentroids[i].coordinate[c] += tmp_newCentroids[i].coordinate[c];
-                    }
-                    counts[i] += tmp_cluster_cardinality[i];
+                    newCentroids[i] += tmp_newCentroids[i];
+                    counts[i] += tmp_counts[i];
                 }
             }
 
         }
 
-        for (int i = 0; i < newCentroids.size(); ++i) {
-            newCentroids[i].actualCentroid = counts[i];
-            for (double &c: newCentroids[i].coordinate) {
-                if (counts[i] != 0)
-                    c = c / counts[i];
-            }
+        for (int i = 0; i < k; i++) {
+            newCentroids[i] /= counts[i];
         }
 
         /*
@@ -66,10 +59,12 @@ vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int m
         */
 
         centroids = newCentroids;
+
     }
 
     return centroids;
 }
+
 
 int runSingleTest(bool output, const int t, vector<Point> data, const int k, int n, int maxIterations) {
 
@@ -86,6 +81,7 @@ int runSingleTest(bool output, const int t, vector<Point> data, const int k, int
 
     cout << "D:" + to_string(data.size()) + " K:" + to_string(k) + " T:" + to_string(t) +
             " Execution time parallel: " << sum_time << " seconds" << endl;
+
     writeResult(to_string(data.size()), to_string(k), t, sum_time, "../Times/Times_Parallel.txt");
 
     if (output) {
@@ -119,10 +115,10 @@ int runSingleTest_initialization(bool output, const int t, vector<Point> data, c
 
 }
 
-int runAllTest(bool output,bool type, int n) {
+int runAllTest(bool output, bool type, int n) {
 
     std::vector<int> threads = {2, 4, 8, 16};
-    std::vector<std::string> file_names = {"100", "1000", "10000", "100000", "1000000", "10000000"};
+    std::vector<std::string> file_names = { "100", "1000", "10000", "100000", "1000000", "10000000"};
     std::vector<int> cen = {3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50};
 
     int maxIterations = 100;
@@ -131,10 +127,10 @@ int runAllTest(bool output,bool type, int n) {
         for (const auto k: cen) {
             vector<Point> data = loadDataset("../input/dataset_" + name + "_" + to_string(k) + ".csv");
             for (const auto t: threads) {
-                if(type)
-                    runSingleTest(output,t, data, k, n, maxIterations);
+                if (type)
+                    runSingleTest(output, t, data, k, n, maxIterations);
                 else
-                    runSingleTest_initialization(output,t, data, k, n);
+                    runSingleTest_initialization(output, t, data, k, n);
             }
         }
     }
@@ -148,11 +144,12 @@ int main() {
     int ret;
     int n_test = 10;
 
-    //vector<Point> data = loadDataset("../input/dataset_" + to_string(100) + "_" + to_string(3) + ".csv");
+    //vector<Point> data = loadDataset("../input/dataset_1000000_5.csv");
     //ret = runSingleTest(false, 16, data, 3, n_test, 100);
     //ret = runSingleTest_initialization(false, 16, data, 3, n_test);
+    //ret = runSingleTest(false, 16, data, 5, n_test, 100); //12.2  6.41004 1.09004
 
-    ret = runAllTest(true,false, n_test);
+    ret = runAllTest(false,true, n_test);
 
     return ret;
 }
