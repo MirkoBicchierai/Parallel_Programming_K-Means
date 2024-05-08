@@ -66,7 +66,7 @@ double distance(const Point& p1, const Point& p2) {
     double dist = 0;
     for (int i = 0; i < DIM; i++)
         dist += (p1.coordinate[i] - p2.coordinate[i]) * (p1.coordinate[i] - p2.coordinate[i]);
-    return sqrt(dist);
+    return dist;
 }
 
 bool areEqual(const std::vector<Point> &vec1, const std::vector<Point> &vec2) {

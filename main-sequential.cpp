@@ -13,12 +13,12 @@ vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int m
         vector<int> counts(k, 0);
         newCentroids = std::vector<Point>(k, Point());
 
-        for (Point& pt: data) {
+        for (Point &pt: data) {
             double minDistance = distance(pt, centroids[0]);
             pt.actualCentroid = 0;
             for (int i = 0; i < k; i++) {
                 double x = distance(pt, centroids[i]);
-                if ( x < minDistance) {
+                if (x < minDistance) {
                     minDistance = x;
                     pt.actualCentroid = i;
                 }
@@ -114,13 +114,13 @@ int runAllTest(bool output, bool type, int n) {
 int main() {
 
     int ret;
-    int n_test = 10;
+    int n_test = 4;
 
-    vector<Point> data = loadDataset("../input/dataset_1000000_5.csv");
+    //vector<Point> data = loadDataset("../input/dataset_1000000_5.csv");
     // ret = runSingleTest(false, data, 3, n_test, 100);
     // ret = runSingleTest_initialization(false, data, 3, n_test);
 
-    ret = runAllTest(true, false, n_test);
+    ret = runAllTest(false, true, n_test);
 
     return ret;
 }

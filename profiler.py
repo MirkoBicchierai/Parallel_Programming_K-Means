@@ -3,8 +3,49 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+def read_file(path):
+    with open(path, 'r') as file:
+        vector_of_words = []
+        for line in file:
+            words = line.strip().split()
+            vector_of_words.append(words)
+    return vector_of_words
+
+
 def speedup():
-    pass
+
+    threads = [2, 4, 8, 16]
+    clusters = [3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+    data_length = ["100", "1000", "10000", "100000", "1000000", "10000000"]
+
+    time_seq = read_file("Times/Times_Kmeans_Sequential.txt")
+    time_par = read_file("Times/Times_Kmeans_Parallel.txt")
+
+    x = [1, 2, 3, 4, 5]
+    y1 = [1, 4, 6, 8, 10]
+    y2 = [2, 2, 5, 7, 9]
+    y3 = [3, 5, 7, 9, 11]
+
+    # Creating the plot
+    plt.plot(x, y1, label='Line 1', color='red')  # Line 1
+    plt.plot(x, y2, label='Line 2', color='green')  # Line 2
+    plt.plot(x, y3, label='Line 3', color='blue')  # Line 3
+
+    # Adding titles and labels
+    plt.title('Multiple Lines Plot')
+    plt.xlabel('X Axis Label')
+    plt.ylabel('Y Axis Label')
+
+    # Show legend
+    plt.legend()
+
+    # Display the plot
+    plt.savefig('plot/test.png')
+
+    print(time_seq)
+    print(time_par)
+    for t in threads:
+        pass
 
 
 def single_plot(dim):
@@ -41,7 +82,6 @@ def single_plot(dim):
             c[unique_values.index(centroid[i])] = c[unique_values.index(centroid[i])] + 1
             ax.scatter(x[i], y[i], z[i], color=colors[unique_values.index(centroid[i])])
 
-
         for i in range(len(df2)):
             ax.scatter(x_cen[i], y_cen[i], z_cen[i], color=colors[i], marker='x', s=100)
 
@@ -54,4 +94,4 @@ def single_plot(dim):
 
 if __name__ == "__main__":
     speedup()
-    single_plot(100)
+    # single_plot(100)
