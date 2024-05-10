@@ -9,21 +9,20 @@ using namespace std;
 vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int maxIterations, int threads) {
 
     int block = ceil(data.size() / threads);
-    std::vector<Point> newCentroids = std::vector<Point>(k, Point());
-    std::vector<int> counts(k, 0);
+    vector<Point> newCentroids(k, Point());
+    vector<int> counts(k, 0);
 
     for (int iter = 0; iter < maxIterations; ++iter) {
 
-        newCentroids = std::vector<Point>(k, Point());
-        counts = std::vector<int>(k, 0);
+        newCentroids = vector<Point>(k, Point());
+        counts = vector<int>(k, 0);
 
-#pragma omp parallel num_threads(threads)
+        #pragma omp parallel num_threads(threads)
         {
+            vector<int> tmp_counts(k, 0);
+            vector<Point> tmp_newCentroids(k, Point());
 
-            std::vector<int> tmp_counts(k, 0);
-            std::vector<Point> tmp_newCentroids(k, Point());
-
-#pragma omp for nowait schedule(static, block)
+            #pragma omp for nowait schedule(static, block)
             for (Point &pt: data) {
                 double minDistance = distance(pt, centroids[0]);
                 pt.actualCentroid = 0;
@@ -38,7 +37,7 @@ vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int m
                 tmp_counts[pt.actualCentroid]++;
             }
 
-#pragma omp critical
+            #pragma omp critical
             {
                 for (int i = 0; i < k; i++) {
                     newCentroids[i] += tmp_newCentroids[i];
@@ -65,10 +64,8 @@ vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int m
     return centroids;
 }
 
-
 int runSingleTest(bool output, const int t, vector<Point> data, const int k, int n, int maxIterations) {
 
-    //vector<Point> centroids = randomCentroid(k, data);
     vector<Point> centroids = initialization_kmean_par(data, k, t);
     double sum_time = 0;
     for (int i = 0; i < n; ++i) {
@@ -119,7 +116,7 @@ int runAllTest(bool output, bool type, int n) {
 
     std::vector<int> threads = {2, 4, 8, 16};
     std::vector<std::string> file_names = { "100", "1000", "10000", "100000", "1000000", "10000000"};
-    std::vector<int> cen = {3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50};
+    std::vector<int> cen = {3, 5, 10, 15, 20, 25, 30, 40, 50};
 
     int maxIterations = 100;
 
@@ -142,12 +139,13 @@ int runAllTest(bool output, bool type, int n) {
 int main() {
 
     int ret;
-    int n_test = 10;
+    int n_test = 100;
 
-    //vector<Point> data = loadDataset("../input/dataset_1000000_5.csv");
-    //ret = runSingleTest(false, 16, data, 3, n_test, 100);
+    //vector<Point> data = loadDataset("../input/dataset_1000_5.csv");
+    //ret = runSingleTest(false, 8, data, 5, n_test, 100);
+    //ret = runSingleTest(true, 16, data, 5, n_test, 100);
     //ret = runSingleTest_initialization(false, 16, data, 3, n_test);
-    //ret = runSingleTest(false, 16, data, 5, n_test, 100); //12.2  6.41004 1.09004
+    //ret = runSingleTest(false, 16, data, 5, n_test, 100);
 
     ret = runAllTest(false,true, n_test);
 

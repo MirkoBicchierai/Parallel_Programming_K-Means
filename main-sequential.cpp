@@ -10,6 +10,7 @@ vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int m
     vector<Point> newCentroids = std::vector<Point>(k, Point());
 
     for (int iter = 0; iter < maxIterations; ++iter) {
+
         vector<int> counts(k, 0);
         newCentroids = std::vector<Point>(k, Point());
 
@@ -43,10 +44,8 @@ vector<Point> kMeans(vector<Point> &data, vector<Point> &centroids, int k, int m
     return centroids;
 }
 
-
 int runSingleTest(bool output, vector<Point> data, const int k, int n, int maxIterations) {
 
-    //vector<Point> centroids = randomCentroid(k, data);
     vector<Point> centroids = initialization_kmean_seq(data, k);
 
     double sum_time = 0;
@@ -93,7 +92,7 @@ int runSingleTest_initialization(bool output, vector<Point> data, const int k, i
 int runAllTest(bool output, bool type, int n) {
 
     std::vector<std::string> file_names = {"100", "1000", "10000", "100000", "1000000", "10000000"};
-    std::vector<int> cen = {3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50};
+    std::vector<int> cen = {3, 5, 10, 15, 20, 25, 30, 40, 50};
 
     int maxIterations = 100;
 
@@ -114,10 +113,9 @@ int runAllTest(bool output, bool type, int n) {
 int main() {
 
     int ret;
-    int n_test = 4;
-
+    int n_test = 100;
     //vector<Point> data = loadDataset("../input/dataset_1000000_5.csv");
-    // ret = runSingleTest(false, data, 3, n_test, 100);
+    //ret = runSingleTest(false, data, 5, n_test, 100);
     // ret = runSingleTest_initialization(false, data, 3, n_test);
 
     ret = runAllTest(false, true, n_test);
