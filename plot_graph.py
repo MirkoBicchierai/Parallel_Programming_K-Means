@@ -43,7 +43,7 @@ def single_plot(n, k):
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
     ax.set_zlabel('Z Label')
-    ax.set_title('3D Scatter Plot')
+    ax.set_title('N = 1000, K = 5')
     plt.savefig('plots/plt.png')
 
 

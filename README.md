@@ -8,6 +8,8 @@ CPU of the machine used for testing:
 - Thread per core:  2
 - Core per socket:  8
 
+<img src="plots/plt.png">
+
 # Speed-up results for the clustering algorithm:
 
 <h3>Speed-up plots for all cluster sizes tested:</h3>
