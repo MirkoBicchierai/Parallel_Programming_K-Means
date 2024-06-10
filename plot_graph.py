@@ -33,16 +33,16 @@ def single_plot(n, k):
     ax = fig.add_subplot(111, projection='3d')
     fig.subplots_adjust(left=0.01, right=0.99, bottom=0.05, top=0.95)
     for i in range(len(df)):
-        ax.scatter(x_point[i], y_point[i], z_point[i], color=colors[centroid_point[i]], alpha=0.1)
+        ax.scatter(x_point[i], y_point[i], z_point[i], color=colors[centroid_point[i]], alpha=0.15)
 
     for i in range(len(df2)):
         ax.scatter(x_cen[i], y_cen[i], z_cen[i], marker='x', s=100, color="black", alpha=1)
 
     ax.grid(True)
 
-    ax.set_xlabel('X Label')
-    ax.set_ylabel('Y Label')
-    ax.set_zlabel('Z Label')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z ')
     ax.set_title('N = 1000, K = 5')
     plt.savefig('plots/plt.png')
 

@@ -1,5 +1,3 @@
-import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 
 
@@ -74,21 +72,53 @@ def plot_speed_up(t_s, t_p, title, ty):
     plt.close()
 
 
+def write_result(improvements, x, file_name, title):
+    with open(file_name, 'a') as f:
+        f.write(title + '\n')
+    for i in range(len(improvements)):
+        with open(file_name, 'a') as f:
+            f.write(" T:" + str(x[i]) + " " + str(improvements[i]) + '\n')
+
+
+def compute_result(t_s, t_p, path):
+    clusters = [3, 5, 10, 15, 20, 25, 30, 40, 50]
+    data_length = ["100", "1000", "10000", "100000", "1000000", "10000000"]
+
+    for n in data_length:
+        i = 0
+        speed_up_x = []
+        speed_up_y = []
+        for k in clusters:
+            line_seq = []
+            for line in t_s:
+                if int(line[1]) == k and line[0] == n:
+                    line_seq = line
+            speed_up_x.append(1)
+            speed_up_y.append(1)
+            for line in t_p:
+                if int(line[1]) == k and line[0] == n:
+                    speed_up_x.append(int(line[2]))
+                    speed_up_y.append(float(line_seq[3]) / float(line[3]))
+            write_result(speed_up_y, speed_up_x, path, "N: " + str(n) + " K: " + str(k))
+            speed_up_x = []
+            speed_up_y = []
+            i = i + 1
+
+
 def speedup():
     time_seq = read_file("Times/Times_Kmeans_Sequential.txt")
     time_par = read_file("Times/Times_Kmeans_Parallel.txt")
+    compute_result(time_seq, time_par, "SpeedUp/speedup_initialization.txt")
 
     plot_speed_up(time_seq, time_par, "SpeedUp KMeans Initialization", True)
     plot_speed_up(time_seq, time_par, "SpeedUp KMeans Initialization", False)
 
     time_seq = read_file("Times/Times_Sequential.txt")
     time_par = read_file("Times/Times_Parallel.txt")
+    compute_result(time_seq, time_par, "SpeedUp/speedup_clustering.txt")
 
     plot_speed_up(time_seq, time_par, "SpeedUp clustering", True)
     plot_speed_up(time_seq, time_par, "SpeedUp clustering", False)
-
-
-
 
 
 if __name__ == "__main__":
