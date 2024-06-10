@@ -44,6 +44,7 @@ def single_plot(n, k):
     ax.set_zlabel('Z ')
     ax.set_title('N = 1000, K = 5')
     plt.savefig('plots/plt.png')
+    plt.savefig('plots/plt.pdf')
 
 
 if __name__ == "__main__":

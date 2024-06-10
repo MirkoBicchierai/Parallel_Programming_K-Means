@@ -65,10 +65,13 @@ def plot_speed_up(t_s, t_p, title, ty):
     plt.xlabel('Thread')
     plt.ylabel('Speed Up')
     plt.legend()
+
     if ty:
         plt.savefig('SpeedUp/' + title + "_N" + n + '.png')
+        plt.savefig('SpeedUp/' + title + "_N" + n + '.pdf')
     else:
         plt.savefig('SpeedUp/' + title + "_K" + str(k) + '.png')
+        plt.savefig('SpeedUp/' + title + "_K" + str(k) + '.pdf')
     plt.close()
 
 
@@ -109,17 +112,17 @@ def speedup():
     time_seq = read_file("Times/Times_Kmeans_Sequential.txt")
     time_par = read_file("Times/Times_Kmeans_Parallel.txt")
     compute_result(time_seq, time_par, "SpeedUp/speedup_initialization.txt")
-    """
+
     plot_speed_up(time_seq, time_par, "SpeedUp KMeans Initialization", True)
     plot_speed_up(time_seq, time_par, "SpeedUp KMeans Initialization", False)
-    """
+
     time_seq = read_file("Times/Times_Sequential.txt")
     time_par = read_file("Times/Times_Parallel.txt")
     compute_result(time_seq, time_par, "SpeedUp/speedup_clustering.txt")
-"""
+
     plot_speed_up(time_seq, time_par, "SpeedUp clustering", True)
     plot_speed_up(time_seq, time_par, "SpeedUp clustering", False)
-"""
+
 
 if __name__ == "__main__":
     speedup()
