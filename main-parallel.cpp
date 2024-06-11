@@ -141,13 +141,13 @@ int main() {
     int ret;
     int n_test = 100;
 
-    //vector<Point> data = loadDataset("../input/dataset_1000_5.csv");
-    //ret = runSingleTest(false, 8, data, 5, n_test, 100);
-    //ret = runSingleTest(true, 16, data, 5, n_test, 100);
+    vector<Point> data = loadDataset("../input/dataset_1000_5.csv");
+    ret = runSingleTest(true, 8, data, 5, n_test, 100);
+    ret = runSingleTest(true, 16, data, 5, n_test, 100);
     //ret = runSingleTest_initialization(false, 16, data, 3, n_test);
     //ret = runSingleTest(false, 16, data, 5, n_test, 100);
 
-    ret = runAllTest(false,true, n_test);
+    //ret = runAllTest(false,true, n_test);
 
     return ret;
 }
